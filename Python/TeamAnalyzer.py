@@ -27,17 +27,17 @@ for i, arg in enumerate(sys.argv):
     # the Pokemon is weak against that type
     cursor = con.cursor()
     if (arg.isnumeric()):  # This will store the name, type1 and type2 of the pokemone based on it's pokedexid
-        name_types = ("SELECT p.name, pv.type1, pv.type2 FROM pokemon p JOIN pokemon_types_view pv ON p.name = pv.name WHERE p.id = " + arg + ";")
+        name_types = ("SELECT pokemon.name, pokemon_types_view.type1, pokemon_types_view.type2 FROM pokemon JOIN pokemon_types_view ON pokemon.name = pokemon_types_view.name WHERE pokemon.id = " + arg + ";")
         cursor.execute(name_types)
     elif (arg is not None): # This will store the name, type1 and type2 of the pokemone based on it's name
-        name_types = ('SELECT p.name, pv.type1, pv.type2 FROM pokemon p JOIN pokemon_types_view pv ON p.name = pv.name WHERE p.name = "' + arg + '";')
+        name_types = ('SELECT pokemon.name, pokemon_types_view.type1, pokemon_types_view.type2 FROM pokemon JOIN pokemon_types_view ON pokemon.name = pokemon_types_view.name WHERE pokemon.name = "' + arg + '";')
         cursor.execute(name_types)
     result = cursor.fetchone()
 
     # This will pull the type and it's corresponding strength/weakness rating and then store it in the according array
     for type in types:
-        sql = ("SELECT pv.against_" + type + " " +
-            "FROM pokemon_types_battle_view pv " +
+        sql = ("SELECT pokemon_types_battle_view.against_" + type + " " +
+            "FROM pokemon_types_battle_view " +
             "WHERE type1name = '" + result[1] + "' AND type2name = '" + result[2] +"';")
         cursor.execute(sql)
         test = cursor.fetchone()
